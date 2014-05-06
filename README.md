@@ -8,7 +8,7 @@ Porter，云存储时代的搬运工
 
 ## 使用方法
 0. 克隆代码 `git clone git@gitcafe.com:whiteworld/porter-for-UPYUN.git`
-1. 安装依赖 `cd porter-for-upyun;pip install -r requirements`
+1. 安装依赖 `cd porter-for-upyun;pip install -r requirements.txt`
 2. 同步 `python porter.py sync dropbox upyun` #把Dropbox上的应用文件夹同步到UpYun上的Bucket里
 
 
