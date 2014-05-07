@@ -1,7 +1,7 @@
 Cporter
 ======
 
-Cporter, sync files between Cloud Storage[Dropbox, UpYun,...]
+Cporter, sync files between Cloud Storage [Dropbox, UpYun,...]
 
 ### INSTALL
 
