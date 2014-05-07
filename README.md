@@ -1,16 +1,29 @@
-Porter
+Cporter
 ======
 
-Porter，云存储时代的搬运工
+Cporter, sync files between Cloud Storage[Dropbox, UpYun,...]
 
-## 功能
-方便的把多个云存储（UpYun、Dropbox）上的文件进行批量同步。
+## INSTALL
 
-## 使用方法
-0. 克隆代码 `git clone git@gitcafe.com:whiteworld/porter-for-UPYUN.git`
-1. 安装依赖 `cd porter-for-upyun;pip install -r requirements.txt`
-2. 同步 `python porter.py sync dropbox upyun` #把Dropbox上的应用文件夹同步到UpYun上的Bucket里
+	# pip install cporter
+
+## USAGE
+	
+	# cporter --help
+	
+	Usage: cporter [OPTIONS] COMMAND [ARGS]...
+
+	  Cporter, sync files between UpYun,Dropbox and so on.
+
+	Options:
+	  --version  Show the version and exit.
+	  --help     Show this message and exit.
+
+	Commands:
+	  clean  delete config file
+	  sync   sync files between <source> and <dest>
 
 
 ## TODO
-- Package
+- ~~Package~~
+- Add more Cloud Storage
