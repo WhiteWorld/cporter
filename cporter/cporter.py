@@ -132,7 +132,7 @@ def Dropbox2UpyunDir(dir, up_client, dropbox_client):
 @click.group()
 @click.version_option(VERSION, prog_name="porter")
 def main():
-    """Cporter, sync files between UpYun,Dropbox and so on."""
+    """Cporter, sync files between Cloud Storage [Dropbox, UpYun,...]"""
     pass
 
 

@@ -1,7 +1,7 @@
 Cporter
 ======
 
-Cporter, sync files between Cloud Storage[Dropbox, UpYun,...]
+Cporter, sync files between Cloud Storage [Dropbox, UpYun,...]
 
 ### INSTALL
 
@@ -13,7 +13,7 @@ Cporter, sync files between Cloud Storage[Dropbox, UpYun,...]
 	
 	Usage: cporter [OPTIONS] COMMAND [ARGS]...
 
-	  Cporter, sync files between UpYun,Dropbox and so on.
+    Cporter, sync files between Cloud Storage [Dropbox, UpYun,...]
 
 	Options:
 	  --version  Show the version and exit.
