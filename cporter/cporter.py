@@ -6,15 +6,17 @@ import ConfigParser
 import os
 import sys
 
+
 APP_CREATE_URL="https://www2.dropbox.com/developers/apps"
 
 config = ConfigParser.RawConfigParser()
 
 home = os.path.expanduser("~")
 
-config_file_path=home+'/.porter'
+config_file_path=home+'/.cporter'
 
-#config.read(config_file_path)
+VERSION = '0.1.0'
+#__version__ = '0.1.0'
 
 def set_config_file(filepath):
     if not os.path.isfile(filepath):
@@ -128,9 +130,9 @@ def Dropbox2UpyunDir(dir, up_client, dropbox_client):
                 Dropbox2UpyunDir(item['path'], up_client, dropbox_client)
 
 @click.group()
-@click.version_option("v0.1", prog_name="porter")
-def cli():
-    """Porter, sync files between UpYun,Dropbox and so on."""
+@click.version_option(VERSION, prog_name="porter")
+def main():
+    """Cporter, sync files between UpYun,Dropbox and so on."""
     pass
 
 
@@ -162,8 +164,8 @@ def clean():
     else:    ## Show an error ##
         print("Error: %s file not found" % config_file_path)
 
-cli.add_command(sync)
-cli.add_command(clean)
+main.add_command(sync)
+main.add_command(clean)
 
 if __name__ == '__main__':
-    cli()
+    main()
