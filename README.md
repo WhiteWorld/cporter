@@ -13,7 +13,11 @@ Cporter, sync files between Cloud Storage [Dropbox, UpYun,...]
 	
 	Usage: cporter [OPTIONS] COMMAND [ARGS]...
 
+<<<<<<< HEAD
     Cporter, sync files between Cloud Storage [Dropbox, UpYun,...]
+=======
+	  Cporter, sync files between UpYun,Dropbox and so on.
+>>>>>>> 6243eea88a89b181f318223b5ac3f6c9adc4b603
 
 	Options:
 	  --version  Show the version and exit.
