@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import upyun
 import dropbox
+
 import click
 import ConfigParser
 import os
@@ -18,7 +19,7 @@ home = os.path.expanduser("~")
 
 config_file_path=home + '.cporter'
 
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 
 SUPPORT = "[UpYun, Dropbox, Qiniu]"
 
@@ -33,61 +34,6 @@ def create_config_file():
         with open(config_file_path, 'wb') as f:
             print "create the config file:"+config_file_path
             config.write(f)
-
-
-
-
-def set_config_file(filepath):
-    if not os.path.isfile(filepath):
-        with open(filepath, 'w+') as f:
-            print "This is the first time you run this."
-            print "*********************Config Upyun****************************************"
-            while True:
-                bucketname = raw_input('Enter bucketname: ')
-                username = raw_input('Enter username: ')
-                password = raw_input('Enter password: ')
-                ok = raw_input('The bucketname is '+bucketname+', username is '+username+', password is '+password+'. Looks ok? [y/n]')
-                if ok == 'y' or ok == 'Y':
-                    break
-            f.write("[UpYun]\n")
-            f.write('bucketname='+bucketname+'\n')
-            f.write('username='+username+'\n')
-            f.write('password='+password+'\n')
-
-
-            print "*********************Config Dropbox****************************************"
-            print " 1) Open the following URL in your Browser, and log in using your account: " + APP_CREATE_URL
-            print " 2) Click on 'Create App', then select 'Dropbox API app'"
-            print " 3) Select 'Files and datastores'"
-            print " 4) Now go on with the configuration, choosing the app permissions and access restrictions to your DropBox folder"
-            print " 5) Enter the 'App Name' that you prefer (e.g. UpYun)"
-
-            print " Now, click on the 'Create App' button."
-
-            print " When your new App is successfully created, please type the App Key, App Secret and the Permission type shown in the confirmation page:"
-            while True:
-                app_key = raw_input('Enter App key: ')
-                app_secret = raw_input('Enter App secret: ')
-                ok = raw_input("The App key is "+app_key+" , App secret is "+app_secret+". Looks OK? [y/n]")
-                if ok == 'y' or ok == 'Y':
-                    break
-            f.write('[Dropbox]\n')
-            f.write('app_key='+app_key+'\n')
-            f.write('app_secret='+app_secret+'\n')
-
-            print "*********************Config Qiniu****************************************"
-            while True:
-                bucketname = raw_input('Enter bucketname: ')
-                app_key = raw_input('Enter app_key: ')
-                app_secret = raw_input('Enter app_secret: ')
-                ok = raw_input('The bucketname is '+bucketname+', app_key is '+app_key+', app_secret is '+app_secret+'. Looks ok? [y/n]')
-                if ok == 'y' or ok == 'Y':
-                    break
-            f.write("[Qiniu]\n")
-            f.write('bucketname='+bucketname+'\n')
-            f.write('app_key='+username+'\n')
-            f.write('app_secret='+password+'\n')
-    config.read(filepath)
 
 def init_upyun(config):
     try:
@@ -112,7 +58,6 @@ def init_qiniu(config):
     policy = qiniu.rs.PutPolicy(BUCKETNAME)
     uptoken = policy.token()
     return qiniu, uptoken
-    #return upyun.UpYun(BUCKETNAME, USERNAME, PASSWORD)
 
 def init_dropbox(config):
     try:
@@ -146,7 +91,6 @@ def Upyun2DropboxFile(filepath, up_client, dropbox_client):
     f = up_client.get(filepath)
     dropbox_client.put_file(filepath, f, overwrite=True)
 
-
 def Upyun2DropboxDir(dir, up_client, dropbox_client):
     res = up_client.getlist(dir)
     for item in res:
@@ -173,12 +117,10 @@ def Upyun2QiniuDir(dir, up_client, qiniu_client, uptoken):
         else:
             Upyun2QiniuFile(path, up_client, qiniu_client, uptoken)
 
-
 def Dropbox2UpyunFile(filepath, dropbox_client, up_client):
     print "Sync..."+filepath
     with dropbox_client.get_file(filepath) as f:
         up_client.put(filepath, f.read())
-
 
 def Dropbox2UpyunDir(dir, dropbox_client, up_client):
     res = dropbox_client.metadata(dir)
@@ -191,14 +133,12 @@ def Dropbox2UpyunDir(dir, dropbox_client, up_client):
             else:
                 Dropbox2UpyunDir(item['path'], dropbox_client, up_client)
 
-
 def Dropbox2QiniuFile(filepath, dropbox_client, qiniu_client, uptoken):
     print "Sync..."+filepath
     with dropbox_client.get_file(filepath) as f:
         ret, err = qiniu_client.io.put(uptoken,filepath,f)
         if err is not None:
             sys.stderr.write('error: %s ' % err)
-
 
 def Dropbox2QiniuDir(dir, dropbox_client, qiniu_client, uptoken):
     res = dropbox_client.metadata(dir)
@@ -211,12 +151,23 @@ def Dropbox2QiniuDir(dir, dropbox_client, qiniu_client, uptoken):
             else:
                 Dropbox2QiniuDir(item['path'], dropbox_client, qiniu_client, uptoken)
 
+# not used
+def list_all(bucket, rs=None, prefix=None, limit=None):
+    if rs is None:
+        rs = qiniu.rsf.Client()
+    marker = None
+    err = None
+    while err is None:
+        ret, err = rs.list_prefix(bucket_name, prefix=prefix, limit=limit, marker=marker)
+        marker = ret.get('marker', None)
+        for item in ret['items']:
+            #do something
+            pass
+    if err is not qiniu.rsf.EOF:
+        # 错误处理
+        pass
 
-@click.group()
-@click.version_option(VERSION, prog_name="porter")
-def main():
-    """Cporter, sync files between Cloud Storage [Dropbox, UpYun, Qiniu]"""
-    pass
+
 
 
 @click.command()
@@ -335,6 +286,13 @@ def config(storage):
         config_qiniu()
     else:
         print "Only support:"+SUPPORT
+
+@click.group()
+@click.version_option(VERSION, prog_name="cporter")
+def main():
+    """Cporter, sync files between Cloud Storage [Dropbox, UpYun, Qiniu]"""
+    pass
+
 
 main.add_command(sync)
 main.add_command(clean)
